@@ -1,15 +1,11 @@
-package algodatTugas;
+package no9dan12;
+public abstract class LinearList{
 
-public interface LinearList {
-    public boolean isEmpty();
-    public int size();
-    public Object get(int index);
-    public int indexOf(Object theElement);
-    public Object remove(int index);
-    public void add(int index, Object theElement);
+    int modCount;
+    public abstract int size();
+    public abstract void add(int index, Object obj);
     @Override
-    public String toString();
-    public void trimToSize();
-    public Object setSize(int no);
-    public Object clear();
+    public abstract String toString();
+    protected abstract void removeRange(int fromIndex, int toIndex);
+    protected abstract Object clone(Object [] a);
 }

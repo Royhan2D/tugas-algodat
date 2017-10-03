@@ -1,124 +1,33 @@
-package algodatTugas;
-
-public class ArrayLinearList implements LinearList {
-
-    protected Object[] element, element2;
-    protected int size;
-    protected int capacity;
-    int index;
-
-    public ArrayLinearList(int capacity) {
-        this.capacity = capacity;
-        element = new Object[capacity];
-        element = ChangeArrayLengthh.changeLength1D(element, 2 * capacity);
-        index = 0;
+package no9dan12;
+public class ArrayLinearList extends LinearList{
+    public Object [] element;
+    public int size;
+    public int modCount;
+    public int offset,expectedModCount;
+    private Object attr = new Object();
+    public ArrayLinearList(int initialCapacity){
+        if(initialCapacity < 1)
+            throw new IllegalArgumentException("initial capacity must be >=1");
+        element = new Object [initialCapacity];
     }
-
-    public ArrayLinearList() {
-        this(5);
+    public ArrayLinearList(){
+        this(10);
     }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    public int size() {
-
+    @Override
+    public int size(){
         return size;
     }
-
-    public void add(int index, Object theElement) {
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException("index = " + index + "size = " + size);
-        }
-        if (size == element.length) {
-            ArrayLinearList tam = new ArrayLinearList(size);
-        }
-        for (int i = size - 1; i >= index; i--) {
+    @Override
+    public void add(int index, Object obj){
+        for(int i = size - 1; i >= index; i++)
             element[i + 1] = element[i];
-        }
-        element[index] = theElement;
+        element[index] = obj;
         size++;
     }
-
-    void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("index = " + index + "size = " + size);
-        }
-    }
-
-    public void trimToSize() {
-        element2 = new Object[size];
-        if (size < element.length) {
-            System.arraycopy(element, 0, element2, 0, size);
-
-            element = element2;
-        }
-    }
-
-    public Object remove(int index) {
-        checkIndex(index);
-        Object removeElement = element[index];
-        for (int i = index + 1; i < size; i++) {
-            element[i - 1] = element[i];
-        }
-        element[--size] = null;
-        return removeElement;
-    }
-
-    public Object setSize(int newArray) {
-        if (size > newArray) {
-            int index = size - newArray;
-            Object removedElement = element[index];
-            for (int i = 0; i < index; i++) {
-                for (int j = index + 1; j < size; j++) {
-                    element[j - 1] = element[j];
-                }
-
-                element[--size] = null;
-            }
-            return removedElement;
-        } else {
-            element2 = new Object[newArray];
-            System.arraycopy(element, 0, element2, 0, size);
-
-            element = element2;
-        }
-        return size;
-    }
-
-    public Object set(int index, Object theElement) {
-        return null;
-    }
-
-    public Object clear() {
-        for (int i = 0; i < size; i++) {
-            element[i] = null;
-        }
-        return size;
-    }
-
     @Override
-    public Object get(int index) {
-        checkIndex(index);
-        return element[index];
-    }
-
-    @Override
-    public int indexOf(Object theElement) {
-        for (int i = 0; i < size; i++) {
-            if (element[i].equals(theElement)) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
     public String toString(){
         StringBuffer s = new StringBuffer("[");
-        
-        for(int i=0; i<size; i++)
+        for(int i = 0; i < size; i++)
             if(element[i] == null)
                 s.append("null, ");
             else
@@ -126,7 +35,23 @@ public class ArrayLinearList implements LinearList {
         if(size > 0)
             s.delete(s.length() - 2, s.length());
         s.append("]");
-        
         return new String(s);
     }
-}
+    @Override
+    protected void removeRange(int fromindex, int toIndex){
+          //modCount++;
+          int numMoved = size - toIndex;
+          System.arraycopy(element, toIndex, element, fromindex, numMoved);
+          int newSize = size - (toIndex-fromindex);
+          while(size != newSize)
+              element[--size] = null;
+    } 
+    @Override
+    public Object clone(Object[] a) {
+        a = new Object[size];
+        a = element.clone();
+        return toString();
+    }
+}  
+
+
